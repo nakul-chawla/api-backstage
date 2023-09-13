@@ -1,0 +1,423 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /notify:
+    post:
+      tags:
+      - authorization-controller
+      operationId: getToken
+      parameters:
+      - name: code
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: state
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: session_state
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+  /:
+    post:
+      tags:
+      - notification-controller
+      operationId: notifyTeams_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ChatMessage'
+components:
+  schemas:
+    NotificationRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        id:
+          type: string
+        url:
+          type: string
+        tag:
+          type: string
+    ChannelIdentity:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        channelId:
+          type: string
+        teamId:
+          type: string
+    ChatMessage:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        id:
+          type: string
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageAttachment'
+        body:
+          $ref: '#/components/schemas/ItemBody'
+        channelIdentity:
+          $ref: '#/components/schemas/ChannelIdentity'
+        chatId:
+          type: string
+        createdDateTime:
+          type: string
+          format: date-time
+        deletedDateTime:
+          type: string
+          format: date-time
+        etag:
+          type: string
+        eventDetail:
+          $ref: '#/components/schemas/EventMessageDetail'
+        from:
+          $ref: '#/components/schemas/ChatMessageFromIdentitySet'
+        importance:
+          type: string
+          enum:
+          - NORMAL
+          - HIGH
+          - URGENT
+          - UNKNOWN_FUTURE_VALUE
+          - UNEXPECTED_VALUE
+        lastEditedDateTime:
+          type: string
+          format: date-time
+        lastModifiedDateTime:
+          type: string
+          format: date-time
+        locale:
+          type: string
+        mentions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageMention'
+        messageHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageHistoryItem'
+        messageType:
+          type: string
+          enum:
+          - MESSAGE
+          - CHAT_EVENT
+          - TYPING
+          - UNKNOWN_FUTURE_VALUE
+          - SYSTEM_EVENT_MESSAGE
+          - UNEXPECTED_VALUE
+        policyViolation:
+          $ref: '#/components/schemas/ChatMessagePolicyViolation'
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageReaction'
+        replyToId:
+          type: string
+        subject:
+          type: string
+        summary:
+          type: string
+        webUrl:
+          type: string
+        hostedContents:
+          $ref: '#/components/schemas/ChatMessageHostedContentCollectionPage'
+        replies:
+          $ref: '#/components/schemas/ChatMessageCollectionPage'
+    ChatMessageAttachment:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        content:
+          type: string
+        contentType:
+          type: string
+        contentUrl:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        teamsAppId:
+          type: string
+        thumbnailUrl:
+          type: string
+    ChatMessageCollectionPage:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        nextPage:
+          $ref: '#/components/schemas/ChatMessageCollectionRequestBuilder'
+        currentPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessage'
+    ChatMessageCollectionRequestBuilder:
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/IBaseClientObject'
+        requestUrl:
+          type: string
+    ChatMessageFromIdentitySet:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        application:
+          $ref: '#/components/schemas/Identity'
+        device:
+          $ref: '#/components/schemas/Identity'
+        user:
+          $ref: '#/components/schemas/Identity'
+    ChatMessageHistoryItem:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        actions:
+          type: array
+          items:
+            type: string
+            enum:
+            - REACTION_ADDED
+            - REACTION_REMOVED
+            - ACTION_UNDEFINED
+            - UNKNOWN_FUTURE_VALUE
+            - UNEXPECTED_VALUE
+        modifiedDateTime:
+          type: string
+          format: date-time
+        reaction:
+          $ref: '#/components/schemas/ChatMessageReaction'
+    ChatMessageHostedContent:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        id:
+          type: string
+        contentBytes:
+          type: string
+          format: byte
+        contentType:
+          type: string
+    ChatMessageHostedContentCollectionPage:
+      type: object
+      properties:
+        count:
+          type: integer
+          format: int64
+        nextPage:
+          $ref: '#/components/schemas/ChatMessageHostedContentCollectionRequestBuilder'
+        currentPage:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChatMessageHostedContent'
+    ChatMessageHostedContentCollectionRequestBuilder:
+      type: object
+      properties:
+        client:
+          $ref: '#/components/schemas/IBaseClientObject'
+        requestUrl:
+          type: string
+    ChatMessageMention:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        id:
+          type: integer
+          format: int32
+        mentioned:
+          $ref: '#/components/schemas/ChatMessageMentionedIdentitySet'
+        mentionText:
+          type: string
+    ChatMessageMentionedIdentitySet:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        application:
+          $ref: '#/components/schemas/Identity'
+        device:
+          $ref: '#/components/schemas/Identity'
+        user:
+          $ref: '#/components/schemas/Identity'
+        conversation:
+          $ref: '#/components/schemas/TeamworkConversationIdentity'
+    ChatMessagePolicyViolation:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        dlpAction:
+          type: array
+          items:
+            type: string
+            enum:
+            - NONE
+            - NOTIFY_SENDER
+            - BLOCK_ACCESS
+            - BLOCK_ACCESS_EXTERNAL
+            - UNEXPECTED_VALUE
+        justificationText:
+          type: string
+        policyTip:
+          $ref: '#/components/schemas/ChatMessagePolicyViolationPolicyTip'
+        userAction:
+          type: array
+          items:
+            type: string
+            enum:
+            - NONE
+            - OVERRIDE
+            - REPORT_FALSE_POSITIVE
+            - UNEXPECTED_VALUE
+        verdictDetails:
+          type: array
+          items:
+            type: string
+            enum:
+            - NONE
+            - ALLOW_FALSE_POSITIVE_OVERRIDE
+            - ALLOW_OVERRIDE_WITHOUT_JUSTIFICATION
+            - ALLOW_OVERRIDE_WITH_JUSTIFICATION
+            - UNEXPECTED_VALUE
+    ChatMessagePolicyViolationPolicyTip:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        complianceUrl:
+          type: string
+        generalText:
+          type: string
+        matchedConditionDescriptions:
+          type: array
+          items:
+            type: string
+    ChatMessageReaction:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        createdDateTime:
+          type: string
+          format: date-time
+        reactionType:
+          type: string
+        user:
+          $ref: '#/components/schemas/ChatMessageReactionIdentitySet'
+    ChatMessageReactionIdentitySet:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        application:
+          $ref: '#/components/schemas/Identity'
+        device:
+          $ref: '#/components/schemas/Identity'
+        user:
+          $ref: '#/components/schemas/Identity'
+    EventMessageDetail:
+      type: object
+      properties:
+        oDataType:
+          type: string
+    IBaseClientObject:
+      type: object
+      properties:
+        logger:
+          $ref: '#/components/schemas/ILogger'
+        serializer:
+          $ref: '#/components/schemas/ISerializer'
+        serviceRoot:
+          type: string
+        httpProvider:
+          $ref: '#/components/schemas/IHttpProviderObject'
+        serviceSDKVersion:
+          type: string
+    IHttpProviderObject:
+      type: object
+      properties:
+        serializer:
+          $ref: '#/components/schemas/ISerializer'
+    ILogger:
+      type: object
+      properties:
+        loggingLevel:
+          type: string
+          enum:
+          - ERROR
+          - DEBUG
+    ISerializer:
+      type: object
+    Identity:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        displayName:
+          type: string
+        id:
+          type: string
+    ItemBody:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        content:
+          type: string
+        contentType:
+          type: string
+          enum:
+          - TEXT
+          - HTML
+          - UNEXPECTED_VALUE
+    TeamworkConversationIdentity:
+      type: object
+      properties:
+        oDataType:
+          type: string
+        displayName:
+          type: string
+        id:
+          type: string
+        conversationIdentityType:
+          type: string
+          enum:
+          - TEAM
+          - CHANNEL
+          - CHAT
+          - UNKNOWN_FUTURE_VALUE
+          - UNEXPECTED_VALUE
